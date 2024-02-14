@@ -75,5 +75,3 @@ try {
 } catch (Exception $e) {
     return (new JsonResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR))->send();
 }
-
-

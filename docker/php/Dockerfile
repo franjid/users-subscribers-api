@@ -19,6 +19,14 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
 WORKDIR /code/api
 
 COPY ./code/api/composer.json ./code/api/composer.lock /code/api/
-RUN composer install --ignore-platform-req=ext-sockets --ignore-platform-req=ext-amqp
+RUN composer install \
+    --ignore-platform-req=ext-sockets \
+    --ignore-platform-req=ext-amqp \
+    --ignore-platform-req=ext-pdo \
+    --ignore-platform-req=ext-tokenizer \
+    --ignore-platform-req=ext-xml \
+    --ignore-platform-req=ext-xmlwriter \
+    --ignore-platform-req=ext-dom \
+    --ignore-platform-req=ext-ctype
 
 COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
