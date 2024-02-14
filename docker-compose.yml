@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        ports:
+            - "80:80"
+        volumes:
+            - ./code:/code
+            - /code/api/vendor # ignore folder
+        networks:
+            - web-network
+        depends_on:
+            - php
+    php:
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        volumes:
+            - ./code:/code
+            - /code/api/vendor # ignore folder
+        networks:
+            - web-network
+            - app-network
+
+networks:
+    web-network:
+    app-network:
