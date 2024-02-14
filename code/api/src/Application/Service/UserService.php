@@ -23,10 +23,10 @@ class UserService
         $this->queue = $queue;
     }
 
-    public function getUser(int $id): User
+    public function getUser(string $uuid): User
     {
         try {
-            return $this->userService->getUser($id);
+            return $this->userService->getUserByUuid($uuid);
         } catch (UserNotFoundException $e) {
             throw new \Project\Application\Exception\UserNotFoundException($e->getMessage());
         }

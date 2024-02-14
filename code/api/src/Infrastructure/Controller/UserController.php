@@ -17,15 +17,15 @@ class UserController
         $this->userService = $userService;
     }
 
-    public function getUser(int $id): Response
+    public function getUser(string $uuid): Response
     {
         try {
-            $user = $this->userService->getUser($id);
+            $user = $this->userService->getUser($uuid);
         } catch (UserNotFoundException) {
             return new JsonResponse(status: Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($user->toArray());
+        return new JsonResponse($user->toArrayLite());
     }
 
     public function getUsers(): Response

@@ -108,6 +108,19 @@ class User
             self::FIELD_NAME => $this->getName(),
             self::FIELD_LAST_NAME => $this->getLastName(),
             self::FIELD_STATUS => $this->getStatus(),
+            self::FIELD_CREATED_AT => $this->getCreatedAt()->getTimestamp(),
+            self::FIELD_UPDATED_AT => $this->getUpdatedAt()->getTimestamp(),
+        ];
+    }
+
+    public function toArrayLite(): array
+    {
+        return [
+            self::FIELD_UUID => $this->getUuid(),
+            self::FIELD_EMAIL => $this->getEmail(),
+            self::FIELD_NAME => $this->getName(),
+            self::FIELD_LAST_NAME => $this->getLastName(),
+            self::FIELD_STATUS => $this->getStatus(),
         ];
     }
 }

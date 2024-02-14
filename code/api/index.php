@@ -44,7 +44,7 @@ try {
 
             switch ($method) {
                 case "getUser":
-                    $methodParameters["id"] = $resource["id"];
+                    $methodParameters["uuid"] = $resource["uuid"];
                     break;
                 case "createUser":
                     $methodParameters["body"] = $rawBodyData;

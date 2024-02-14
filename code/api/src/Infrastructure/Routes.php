@@ -14,12 +14,11 @@ class Routes
         $routes = new RouteCollection();
 
         $route = new Route(
-            "/users/{id}",
+            "/users/{uuid}",
             [
                 "_controller" => UserController::class,
                 "method" => "getUser"
             ],
-            ["id" => "\d+"],
             methods: [Request::METHOD_GET]
         );
         $routes->add("user", $route);

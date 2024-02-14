@@ -20,6 +20,11 @@ class UserService
         return $this->userRepository->getUser($id);
     }
 
+    public function getUserByUuid(string $uuid): User
+    {
+        return $this->userRepository->getUserByUuid($uuid);
+    }
+
     public function createUser(UserRaw $user): User
     {
         return $this->userRepository->createUser($user);
