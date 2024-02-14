@@ -10,6 +10,8 @@ RUN apk add --update \
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && pecl install amqp \
     && docker-php-ext-enable amqp \
+    && pecl install xdebug  \
+    && docker-php-ext-enable xdebug \
     && docker-php-ext-install sockets \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install intl \
