@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "doctrine/dbal": "^4.0",
         "symfony/http-foundation": "^7.0",
         "symfony/routing": "^7.0"
     },

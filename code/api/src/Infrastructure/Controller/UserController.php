@@ -2,7 +2,9 @@
 
 namespace Project\Infrastructure\Controller;
 
+use Project\Application\Exception\UserNotFoundException;
 use Project\Application\Service\UserService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController
@@ -16,10 +18,13 @@ class UserController
 
     public function getUser(int $id): Response
     {
-        return new Response(
-            json_encode(["user" => $this->userService->getUser($id)]),
-            Response::HTTP_OK, ["content-type" => "application/json"]
-        );
+        try {
+            $user = $this->userService->getUser($id);
+        } catch (UserNotFoundException) {
+            return new JsonResponse(status: Response::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse($user->toArray());
     }
 
     public function getUsers(): Response

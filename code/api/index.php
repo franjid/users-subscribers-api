@@ -3,21 +3,27 @@
 require_once "vendor/autoload.php";
 
 use Project\Application\Service\UserService;
+use Project\Domain\Service\UserService as DomainUserService;
+use Project\Infrastructure\Controller\UserController;
+use Project\Infrastructure\DbConnection;
+use Project\Infrastructure\Repository\Database\UserRepository;
 use Project\Infrastructure\Routes;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Project\Infrastructure\Controller\UserController;
 
+$dbConnection = (new DbConnection())->getConnection();
 $routes = new Routes();
 $requestContext = new RequestContext();
 $requestContext->fromRequest(Request::createFromGlobals());
 $rawBodyData = $requestContext->getMethod() === Request::METHOD_POST ? file_get_contents("php://input") : null;
-$matcher = new UrlMatcher($routes->getRoutes(), $requestContext);
+$routeMatcher = new UrlMatcher($routes->getRoutes(), $requestContext);
 
 try {
-    $resource = $matcher->match($requestContext->getPathInfo());
+    $resource = $routeMatcher->match($requestContext->getPathInfo());
     $controller = $resource["_controller"];
     $method = $resource["method"];
     $methodParameters = [];
@@ -25,7 +31,9 @@ try {
 
     switch ($controller) {
         case UserController::class:
-            $controllerDependencies["userService"] = new UserService();
+            $userRepository = new UserRepository($dbConnection);
+            $domainUserService = new DomainUserService($userRepository);
+            $controllerDependencies["userService"] = new UserService($domainUserService);
 
             switch ($method) {
                 case "getUser":
@@ -42,9 +50,10 @@ try {
 
     $controllerInstance = new $controller(...$controllerDependencies);
     $controllerInstance->$method(...$methodParameters)->send();
+} catch (ResourceNotFoundException $e) {
+    return (new JsonResponse(status: Response::HTTP_NOT_FOUND))->send();
 } catch (Exception $e) {
-    $response = new Response("", Response::HTTP_NOT_FOUND, ["content-type" => "application/json"]);
-    return $response->send();
+    return (new JsonResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR))->send();
 }
 
 

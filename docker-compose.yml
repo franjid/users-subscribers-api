@@ -18,11 +18,29 @@ services:
         build:
             context: .
             dockerfile: ./docker/php/Dockerfile
+        environment:
+            - MYSQL_HOST
+            - MYSQL_USER
+            - MYSQL_PASSWORD
         volumes:
             - ./code:/code
             - /code/api/vendor # ignore folder
         networks:
             - web-network
+            - app-network
+        depends_on:
+            - mysql
+
+    mysql:
+        platform: linux/x86_64
+        image: mysql:5.7
+        ports:
+            - "33080:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+        volumes:
+            - ./docker/mysql/migrations:/docker-entrypoint-initdb.d
+        networks:
             - app-network
 
 networks:
