@@ -4,6 +4,7 @@ namespace Project\Infrastructure\Controller;
 
 use Project\Application\Exception\UserNotFoundException;
 use Project\Application\Service\UserService;
+use Project\Domain\Entity\UserRaw;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,15 +38,9 @@ class UserController
 
     public function createUser(string $body): Response
     {
-        $user = json_decode($body, TRUE);
+        $user = UserRaw::buildFromArray(json_decode($body, TRUE));
+        $this->userService->createUser($user);
 
-        return new Response(
-            json_encode(
-                [
-                    "message" => "User should be created",
-                    "user" => $user
-                ]),
-            Response::HTTP_ACCEPTED, ["content-type" => "application/json"]
-        );
+        return new JsonResponse($user->toArray(), Response::HTTP_ACCEPTED);
     }
 }
