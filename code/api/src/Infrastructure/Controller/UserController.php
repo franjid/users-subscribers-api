@@ -28,12 +28,11 @@ class UserController
         return new JsonResponse($user->toArrayLite());
     }
 
-    public function getUsers(): Response
+    public function getUsers(int $page, int $numResults): Response
     {
-        return new Response(
-            json_encode(["message" => "Get list of users"]),
-            Response::HTTP_OK, ["content-type" => "application/json"]
-        );
+        $users = $this->userService->getUsers($page, $numResults);
+
+        return new JsonResponse($users->toArray());
     }
 
     public function createUser(string $body): Response

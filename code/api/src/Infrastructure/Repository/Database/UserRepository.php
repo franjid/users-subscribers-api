@@ -5,6 +5,7 @@ namespace Project\Infrastructure\Repository\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
+use Project\Domain\Entity\Collection\UserCollection;
 use Project\Domain\Entity\User;
 use Project\Domain\Entity\UserRaw;
 use Project\Infrastructure\Exception\Database\UserAlreadyExistsException;
@@ -50,6 +51,34 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return User::buildFromArray($user);
+    }
+
+    public function getUsers(int $offset = 0, int $numResults = 10): UserCollection
+    {
+        $sql = "SELECT * FROM users LIMIT " . $offset . ", " . $numResults;
+        $stmt = $this->connection->prepare($sql);
+        $results = $stmt->executeQuery()->fetchAllAssociative();
+
+        if (!$results) {
+            return new UserCollection();
+        }
+
+        $users = [];
+
+        foreach ($results as $user) {
+            $users[] = User::buildFromArray($user);
+        }
+
+        return new UserCollection(...$users);
+    }
+
+    public function getTotalUsers(): int
+    {
+        $sql = "SELECT COUNT(*) AS totalUsers FROM users";
+        $stmt = $this->connection->prepare($sql);
+        $result = $stmt->executeQuery()->fetchAssociative();
+
+        return $result["totalUsers"];
     }
 
     public function createUser(UserRaw $user): User

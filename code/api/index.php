@@ -2,6 +2,7 @@
 
 require_once "vendor/autoload.php";
 
+use Project\Application\Service\PaginationService;
 use Project\Application\Service\UserService;
 use Project\Domain\Service\UserService as DomainUserService;
 use Project\Infrastructure\Controller\UserController;
@@ -40,11 +41,23 @@ try {
         case UserController::class:
             $userRepository = new UserRepository($dbConnection);
             $domainUserService = new DomainUserService($userRepository);
-            $controllerDependencies["userService"] = new UserService($domainUserService, $queue);
+            $paginationService = new PaginationService();
+            $controllerDependencies["userService"] = new UserService($domainUserService, $paginationService, $queue);
 
             switch ($method) {
                 case "getUser":
                     $methodParameters["uuid"] = $resource["uuid"];
+                    break;
+                case "getUsers":
+                    parse_str($requestContext->getQueryString(), $params);
+
+                    $page = isset($params['page']) ? intval($params['page']) : 1;
+                    $numResults = isset($params['numResults']) && $params['numResults'] <= 100
+                        ? intval($params['numResults'])
+                        : 10;
+
+                    $methodParameters["page"] = $page;
+                    $methodParameters["numResults"] = $numResults;
                     break;
                 case "createUser":
                     $methodParameters["body"] = $rawBodyData;
