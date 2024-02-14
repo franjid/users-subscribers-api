@@ -19,8 +19,7 @@ class UserRaw
         string            $email,
         string            $name,
         string            $lastName,
-    )
-    {
+    ) {
         $this->uuid = $uuid;
         $this->email = $email;
         $this->name = $name;

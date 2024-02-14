@@ -37,7 +37,7 @@ class UserController
 
     public function createUser(string $body): Response
     {
-        $user = UserRaw::buildFromArray(json_decode($body, TRUE));
+        $user = UserRaw::buildFromArray(json_decode($body, true));
         $this->userService->createUser($user);
 
         return new JsonResponse($user->toArray(), Response::HTTP_ACCEPTED);

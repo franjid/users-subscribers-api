@@ -33,8 +33,7 @@ class User
         int               $status,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt
-    )
-    {
+    ) {
         $this->id = $id;
         $this->uuid = $uuid;
         $this->email = $email;

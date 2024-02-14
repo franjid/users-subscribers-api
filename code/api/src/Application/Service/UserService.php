@@ -20,8 +20,7 @@ class UserService
         DomainUserService $userService,
         PaginationService $paginationService,
         QueueInterface $queue
-    )
-    {
+    ) {
         $this->userService = $userService;
         $this->paginationService = $paginationService;
         $this->queue = $queue;
