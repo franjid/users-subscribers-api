@@ -7,6 +7,7 @@ services:
             dockerfile: ./docker/nginx/Dockerfile
         ports:
             - "80:80"
+            - "8080:8080"
         volumes:
             - ./code:/code
             - /code/api/vendor # ignore folder
@@ -53,6 +54,18 @@ services:
             - ./docker/rabbitmq/log/:/var/log/rabbitmq
         networks:
             - app-network
+
+    node:
+        build:
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        environment:
+            - NODE_ENV
+        volumes:
+            - ./code:/code
+            - /code/frontend/node_modules # ignore folder
+        networks:
+            - web-network
 
 networks:
     web-network:
