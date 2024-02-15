@@ -5,12 +5,11 @@ This project showcases a simple Users API.
 ## Steps to set it up
 
 1) Copy `.env.example` to `.env`
-2) Copy `code/api/.env.example` to `code/api/.env`
-3) Run:
+2) Run:
     ```
     docker-compose up
     ```
-4) Run:
+3) Run:
     ```
     docker-compose exec php php consumer.php
     ```
