@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <UserItem v-for="user in users" :key="user.uuid" :user="user" />
+    <UserForm @user-added="fetchUsers" />
     <div class="pagination">
       <button @click="prevPage" :disabled="page === 1">Previous</button>
       <button @click="nextPage" :disabled="page * numResults >= totalUsers">Next</button>
@@ -10,11 +11,13 @@
 
 <script>
 import UserItem from './components/UserItem.vue';
+import UserForm from './components/UserForm.vue';
 
 export default {
   name: 'App',
   components: {
-    UserItem
+    UserItem,
+    UserForm
   },
   data() {
     return {
